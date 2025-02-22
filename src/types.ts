@@ -9,6 +9,12 @@ export enum METHOD {
 
 export type RouteHandler = (
   path: string,
-  method: METHOD,
   handler: (req: IncomingMessage, res: ServerResponse) => ServerResponse,
 ) => ServerResponse;
+
+export type Handler = (req: IncomingMessage, res: ServerResponse) => void;
+export type Middleware = (
+  req: IncomingMessage,
+  res: ServerResponse,
+  next?: () => void,
+) => void;

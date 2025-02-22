@@ -1,13 +1,28 @@
-import { server, Router } from "./server";
+import {
+  server,
+  getHandler,
+  postHandler,
+  sendResponse,
+  dataParse,
+} from "./server";
 
-const newRouter = new Router();
-
-newRouter.get("/", (req, res) => {
-  res.end("salom");
+getHandler("/", (req, res) => {
+  sendResponse({ message: "salom" }, req, res);
 });
 
-newRouter.post("/", (req, res) => {
-  res.end("post");
+postHandler("/post", (req, res) => {
+  dataParse(req, (data: any) => {
+    sendResponse({ data }, req, res);
+  });
+});
+
+getHandler("/havy", (req, res) => {
+  let sum = 0;
+  for (let i = 0; i < 10000000000; i++) {
+    sum += i;
+  }
+
+  sendResponse({ message: sum }, req, res);
 });
 
 server.listen(5000, "127.0.0.1", () => {
