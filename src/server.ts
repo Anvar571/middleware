@@ -1,15 +1,15 @@
 import { IncomingMessage, ServerResponse, createServer } from "http";
-import { mainRoutes, notFound } from "./mainRoute";
+import { Routers } from "./routes";
+import { notFound } from "./utility";
 
 function mainHandler(req: IncomingMessage, res: ServerResponse) {
   try {
-    const method = `${req.method} ${req.url}`;
-    const handler = mainRoutes[method];
+    const path = `${req.method} ${req.url}`;
+    const routes = new Routers();
+    const handler = routes.getRoute(path);
 
     if (handler) {
-      setTimeout(() => {
-        handler(req, res);
-      }, 0);
+      handler(req, res);
     } else notFound(req, res);
   } catch (error) {
     if (error instanceof Error) {
