@@ -1,10 +1,6 @@
-import {
-  server,
-  getHandler,
-  postHandler,
-  sendResponse,
-  dataParse,
-} from "./server";
+import { getHandler, postHandler } from "./mainRoute";
+import { server } from "./server";
+import { sendResponse, dataParse } from "./utility";
 
 getHandler("/", (req, res) => {
   sendResponse({ message: "salom" }, req, res);

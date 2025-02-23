@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "ts-node ./src/main.ts",
+    "format": "prettier --ignore-unknown --write .",
     "build": "npx tsc",
     "prepare": "husky"
   },
