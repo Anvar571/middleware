@@ -1,5 +1,12 @@
-import { server } from "./server/server";
+import { Server } from "./server/server";
 
-server.listen(5000, "127.0.0.1", () => {
-  console.log("Server running on 5000 port");
+const server = new Server({
+  host: "localhost",
+  port: 5000,
+});
+
+server.init();
+
+server.on("error", (args) => {
+  console.error(args);
 });
