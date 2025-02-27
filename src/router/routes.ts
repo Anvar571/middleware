@@ -1,7 +1,7 @@
-import { postRoute } from "./postRoute";
+import { Handler } from "types/types";
+import { userRoute } from "../../examples/userRoute";
+import { postRoute } from "../../examples/postRoute";
 import { Router } from "./createRoute";
-import { userRoute } from "./userRoute";
-import { Handler } from "./types";
 
 export class Routers {
   private allRoutes: Router[] = [];
@@ -11,9 +11,8 @@ export class Routers {
   }
 
   public getRoute(path: string): Handler | undefined {
-    const res = this.allRoutes.find((value) => value.getRoute()[path]);
-
-    return res?.searchRoutes(path);
+    // const res = this.allRoutes.find((value) => value.getRoute()[path]);
+    // return res?.searchRoutes(path);
   }
 
   protected add(route: Router) {

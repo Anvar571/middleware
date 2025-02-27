@@ -1,5 +1,5 @@
-import { getBody, sendResponse } from "./utility";
-import { Router } from "./createRoute";
+import { getBody, sendResponse } from "../src/utility/utility";
+import { Router } from "../src/router/createRoute";
 import { IncomingMessage, ServerResponse } from "http";
 
 export const userRoute = new Router();
@@ -12,6 +12,15 @@ userRoute.get("/", (req: IncomingMessage, res: ServerResponse) => {
     req,
     res,
   );
+});
+
+userRoute.get("/haviy", async (req, res) => {
+  let sum = 0;
+  for (let i = 0; i < 1_000_000_0000; i++) {
+    sum += i;
+  }
+
+  sendResponse({ result: sum }, req, res);
 });
 
 userRoute.get("/user", (req: IncomingMessage, res: ServerResponse) => {

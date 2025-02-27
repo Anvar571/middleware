@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse, createServer } from "http";
-import { Routers } from "./routes";
-import { notFound } from "./utility";
+import { Routers } from "../router/routes";
+import { notFound } from "../utility/utility";
 
 function mainHandler(req: IncomingMessage, res: ServerResponse) {
   try {

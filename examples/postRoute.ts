@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { Router } from "./createRoute";
+import { Router } from "./router/createRoute";
 import { getBody, sendResponse } from "./utility";
 
 export const postRoute = new Router();
