@@ -1,23 +1,32 @@
-import {
-  IncomingMessage,
-  ServerResponse,
-  createServer,
-  Server as HttpServer,
-} from "http";
+import { createServer, Server as HttpServer } from "http";
 import { notFound } from "../utility";
 import EventEmitter from "events";
 import { Handler, IServerOptions, RequestMethodType, URL_PATH } from "../types";
 import { Router } from "../router";
+import { HttpRequest } from "./Request";
+import { HttpResponse } from "./Response";
 
-export class Server extends EventEmitter {
+class Server extends EventEmitter {
+  private static instance: Server;
   private server: HttpServer;
-  constructor(private serverOptions: IServerOptions) {
+  private globalRequestMap: Map<URL_PATH, Handler[]> = new Map();
+
+  private constructor(private serverOptions: IServerOptions) {
     super();
-    this.server = createServer(this.hander.bind(this));
+    this.server = createServer((req, res) => {
+      this.hander(req as HttpRequest, res as HttpResponse);
+    });
     this.exaptions();
   }
 
-  public hander(req: IncomingMessage, res: ServerResponse) {
+  public static getInstance(serverOptions: IServerOptions) {
+    if (!this.instance) {
+      this.instance = new Server(serverOptions);
+    }
+    return this.instance;
+  }
+
+  public hander(req: HttpRequest, res: HttpResponse) {
     const path = `${req.method}:${req.url}` as URL_PATH;
     const route = new Router();
     const handlers = route.getRoute(path) ?? [];
@@ -70,11 +79,20 @@ export class Server extends EventEmitter {
     this.handlerReq(path, "HEAD", handlers);
   }
 
+  public use() {}
+
+  public router() {
+    return new Router();
+  }
+
   private handlerReq(
     path: string,
     method: RequestMethodType,
     handlers: Handler[],
-  ) {}
+  ) {
+    const newPath = `${method}:${path}` as URL_PATH;
+    this.globalRequestMap.set(newPath, handlers);
+  }
 
   private exaptions() {
     process.on("uncaughtException", (err) => {
@@ -85,4 +103,8 @@ export class Server extends EventEmitter {
       console.error("Unhandled Promise Rejection:", reason);
     });
   }
+}
+
+export function server(serverOptions: IServerOptions) {
+  return Server.getInstance(serverOptions);
 }

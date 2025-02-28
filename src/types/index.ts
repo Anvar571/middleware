@@ -1,4 +1,6 @@
 import { IncomingMessage, ServerResponse } from "http";
+import { HttpResponse } from "../server/Response";
+import { HttpRequest } from "../server/Request";
 
 export interface IServerOptions {
   port: number;
@@ -17,8 +19,8 @@ export type RequestMethodType =
 export type RequestHandler = (path: string, ...handlers: Handler[]) => void;
 
 export type Handler = (
-  req: IncomingMessage,
-  res: ServerResponse,
+  req: HttpRequest,
+  res: HttpResponse,
   next?: (err?: Error) => {},
   err?: Error,
 ) => void | any;
