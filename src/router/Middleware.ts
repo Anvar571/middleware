@@ -1,9 +1,26 @@
-import { IncomingMessage, ServerResponse } from "http";
+import { MiddlewareFunc } from "../types";
+import { HttpResponse } from "../server/Response";
+import { HttpRequest } from "../server/Request";
 
-export interface IMeddleware {
-  use: (req: IncomingMessage, res: ServerResponse, next: () => void) => void;
-}
+export class Middleware {
+  private middlewares: MiddlewareFunc[];
 
-export class Middleware implements IMeddleware {
-  use(req: IncomingMessage, res: ServerResponse, next: () => void) {}
+  constructor() {
+    this.middlewares = [];
+  }
+
+  public use(middleware: MiddlewareFunc) {
+    this.middlewares.push(middleware);
+  }
+
+  public run(req: HttpRequest, res: HttpResponse, done: () => void) {
+    let index = 0;
+    const next = () => {
+      if (index < this.middlewares.length) {
+        const middleware = this.middlewares[index++];
+        middleware(req, res, next);
+      } else done();
+    };
+    next();
+  }
 }

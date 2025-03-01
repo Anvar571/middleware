@@ -1,15 +1,25 @@
 import { IncomingMessage } from "http";
 import { Socket } from "net";
 
-export interface IResponse {
-  headers?: { [key: string]: any };
-  body?: { [key: string]: any } | string | undefined;
-  query?: { [key: string]: any };
-  params?: { [key: string]: any };
-}
-
 export class HttpRequest extends IncomingMessage {
-  public body() {}
+  constructor(socket: Socket) {
+    super(socket);
+  }
+
+  public async body() {
+    return new Promise((res, rej) => {
+      let buffer: Buffer[] = [];
+
+      this.on("data", (chunk) => {
+        buffer.push(chunk);
+      });
+
+      this.on("end", () => {
+        const result = Buffer.concat(buffer);
+        res(result.toJSON());
+      });
+    });
+  }
 
   public query() {}
 

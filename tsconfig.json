@@ -8,8 +8,10 @@
     "baseUrl": "./src",
     "target": "ESNext",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true
   },
-  "include": ["src/**/*.ts", "examples/userRoute.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }

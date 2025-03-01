@@ -1,4 +1,3 @@
-import { IncomingMessage, ServerResponse } from "http";
 import { HttpResponse } from "../server/Response";
 import { HttpRequest } from "../server/Request";
 
@@ -21,20 +20,15 @@ export type RequestHandler = (path: string, ...handlers: Handler[]) => void;
 export type Handler = (
   req: HttpRequest,
   res: HttpResponse,
-  next?: (err?: Error) => {},
+  next?: (err?: Error) => void,
   err?: Error,
 ) => void | any;
 
 export type URL_PATH = `${RequestMethodType}:${string}`;
 
-export type Middleware = {
-  path: string;
-  middleware: (req: IncomingMessage, res: ServerResponse) => void;
-};
-
 export type MiddlewareFunc = (
-  req: IncomingMessage,
-  res: ServerResponse,
+  req: HttpRequest,
+  res: HttpResponse,
   next?: () => void,
 ) => void;
 
