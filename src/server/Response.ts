@@ -6,6 +6,11 @@ export class HttpResponse extends ServerResponse {
     this.end(JSON.stringify(data));
   }
 
+  public status(code: number) {
+    this.statusCode = code;
+    return this;
+  }
+
   public notFound(message?: string) {
     this.statusCode = 404;
     this.setHeader("Content-Type", "application/json");

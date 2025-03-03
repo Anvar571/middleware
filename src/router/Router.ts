@@ -27,16 +27,22 @@ export class Router extends BaseRouter {
     this.localRoutes.set(newPath, handlers);
   }
 
-  public handleRequest(req: HttpRequest, res: HttpResponse) {
+  public runAllRequests(req: HttpRequest, res: HttpResponse) {
+    this.middlewares.run(req, res, () => {
+      this.handleRequest(req, res);
+    });
+  }
+
+  private handleRequest(req: HttpRequest, res: HttpResponse) {
     const path = `${req.method}:${req.url}` as URL_PATH;
     const handlers = this.localRoutes.get(path) ?? [];
 
-    if (handlers.length > 0) {
-      let index = 0;
-      function next() {
-        let handler = handlers[index++];
-        if (handler) handler(req, res, next);
-      }
+    let index = 0;
+    if (index < handlers.length) {
+      const next = () => {
+        const handler = handlers[index++];
+        handler(req, res, next);
+      };
       next();
     } else res.notFound();
   }

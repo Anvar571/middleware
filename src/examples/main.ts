@@ -3,6 +3,16 @@ import { server } from "../main";
 const app = server();
 const router = app.route();
 
+router.use((req, res, next) => {
+  console.log("First middleware");
+  next();
+});
+
+router.use((req, res, next) => {
+  console.log("Second middleware");
+  res.json({ message: "SECOND MIDDLEWARE" });
+});
+
 router.get("/", (req, res, next) => {
   res.json({ message: "Home page" });
 });

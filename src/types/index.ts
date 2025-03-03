@@ -29,7 +29,7 @@ export type URL_PATH = `${RequestMethodType}:${string}`;
 export type MiddlewareFunc = (
   req: HttpRequest,
   res: HttpResponse,
-  next?: () => void,
+  next: () => void,
 ) => void;
 
 export interface RequestMethod {

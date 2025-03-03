@@ -16,13 +16,10 @@ class Server {
     this.configs = new ServerOptions(serverOptions);
     this.router = new Router();
     this.server = createServer((req, res) => {
-      const request = req as HttpRequest;
-      Object.setPrototypeOf(request, HttpRequest.prototype);
+      const request = Object.setPrototypeOf(req, HttpRequest.prototype);
+      const response = Object.setPrototypeOf(res, HttpResponse.prototype);
 
-      const response = res as HttpResponse;
-      Object.setPrototypeOf(response, HttpResponse.prototype);
-
-      this.router.handleRequest(request, response);
+      this.router.runAllRequests(request, response);
     });
 
     ExceptionHandler.init();
