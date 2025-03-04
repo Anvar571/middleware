@@ -1,6 +1,6 @@
 import { createServer, Server as HttpServer } from "http";
 import { IServerOptions, MiddlewareFunc } from "../types";
-import { Router } from "../router";
+import { Middleware, Router } from "../router";
 import { HttpRequest } from "./Request";
 import { HttpResponse } from "./Response";
 import { ServerOptions } from "../config/default-values";
@@ -8,29 +8,37 @@ import { ExceptionHandler } from "../utility/exaptions";
 
 class Server {
   private static instance: Server;
-  private server: HttpServer;
-  private configs: ServerOptions;
-  private router: Router;
+  private readonly server: HttpServer;
+  private readonly configs: ServerOptions;
+  private readonly router: Router[];
+  private readonly middlewares: Middleware;
 
   private constructor(serverOptions?: IServerOptions) {
     this.configs = new ServerOptions(serverOptions);
-    this.router = new Router();
+    this.router = [];
+    this.middlewares = new Middleware();
     this.server = createServer((req, res) => {
       const request = Object.setPrototypeOf(req, HttpRequest.prototype);
       const response = Object.setPrototypeOf(res, HttpResponse.prototype);
 
-      this.router.runAllRequests(request, response);
+      this.runMiddlewares(request, response);
     });
 
     ExceptionHandler.init();
   }
 
-  public use(middleware: MiddlewareFunc) {
-    this.router.use(middleware);
-  }
+  public use(middleware: MiddlewareFunc): void;
 
-  public route() {
-    return this.router;
+  public use(router: Router): void;
+
+  public use(arg1: Router | MiddlewareFunc) {
+    if (typeof arg1 === "function") {
+      this.middlewares.add(arg1);
+    } else if (arg1 instanceof Router) {
+      this.router.push(arg1);
+    } else {
+      throw new Error("Incorrect argument type");
+    }
   }
 
   public static getInstance(serverOptions?: IServerOptions): Server {
@@ -46,6 +54,18 @@ class Server {
       this.configs.options.host,
       callback,
     );
+  }
+
+  private runMiddlewares(req: HttpRequest, res: HttpResponse) {
+    this.middlewares.run(req, res, () => {
+      this.runRouters(req, res);
+    });
+  }
+
+  private runRouters(req: HttpRequest, res: HttpResponse) {
+    this.router.forEach((router) => {
+      router.runAllRequests(req, res);
+    });
   }
 }
 

@@ -1,21 +1,14 @@
-import { Handler, MiddlewareFunc, RequestMethodType, URL_PATH } from "../types";
+import { Handler, RequestMethodType, URL_PATH } from "../types";
 import { BaseRouter } from "../router/baseRouter";
 import { HttpRequest } from "../server/Request";
 import { HttpResponse } from "../server/Response";
-import { Middleware } from "./Middleware";
 
 export class Router extends BaseRouter {
   private localRoutes: Map<URL_PATH, Handler[]>;
-  private middlewares: Middleware;
 
   constructor() {
     super((path, method, handler) => this.registerRoute(path, method, handler));
     this.localRoutes = new Map();
-    this.middlewares = new Middleware();
-  }
-
-  public use(middleware: MiddlewareFunc) {
-    this.middlewares.use(middleware);
   }
 
   private registerRoute(
@@ -28,9 +21,7 @@ export class Router extends BaseRouter {
   }
 
   public runAllRequests(req: HttpRequest, res: HttpResponse) {
-    this.middlewares.run(req, res, () => {
-      this.handleRequest(req, res);
-    });
+    this.handleRequest(req, res);
   }
 
   private handleRequest(req: HttpRequest, res: HttpResponse) {

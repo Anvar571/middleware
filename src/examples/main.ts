@@ -1,25 +1,33 @@
-import { server } from "../main";
+import { server, Router } from "../main";
 
 const app = server();
-const router = app.route();
 
-router.use((req, res, next) => {
+const newRouter = new Router();
+
+app.use((req, res, next) => {
   console.log("First middleware");
   next();
 });
 
-router.use((req, res, next) => {
+app.use((req, res, next) => {
   console.log("Second middleware");
-  res.json({ message: "SECOND MIDDLEWARE" });
+  // res.json({ message: "SECOND MIDDLEWARE" });
+  next();
 });
 
-router.get("/", (req, res, next) => {
+newRouter.get("/", (req, res, next) => {
   res.json({ message: "Home page" });
 });
 
-router.get("/user", (req, res) => {
+newRouter.get("/user", (req, res) => {
   res.json({ message: "Successfully completed" });
 });
+
+newRouter.get("/home", (req, res) => {
+  res.status(200).json({ message: "Home new get router" });
+});
+
+app.use(newRouter);
 
 app.init(() => {
   console.log(`App running on ${5000} port`);

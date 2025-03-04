@@ -9,7 +9,7 @@ export class Middleware {
     this.middlewares = [];
   }
 
-  public use(middleware: MiddlewareFunc) {
+  public add(middleware: MiddlewareFunc) {
     this.middlewares.push(middleware);
   }
 
