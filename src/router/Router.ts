@@ -28,6 +28,8 @@ export class Router extends BaseRouter {
     const path = `${req.method}:${req.url}` as URL_PATH;
     const handlers = this.localRoutes.get(path) ?? [];
 
+    console.log(handlers, "handler");
+
     let index = 0;
     if (index < handlers.length) {
       const next = () => {
