@@ -58,7 +58,9 @@ class Server {
 
   private runMiddlewares(req: HttpRequest, res: HttpResponse) {
     this.middlewares.run(req, res, () => {
-      this.runRouters(req, res);
+      if (!res.headersSent) {
+        this.runRouters(req, res);
+      }
     });
   }
 
