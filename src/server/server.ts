@@ -19,7 +19,9 @@ class Server {
     this.middlewares = new Middleware();
     this.server = createServer((req, res) => {
       const request = Object.setPrototypeOf(req, HttpRequest.prototype);
-      const response = Object.setPrototypeOf(res, HttpResponse.prototype);
+      const response = this.responseProxy(
+        Object.setPrototypeOf(res, HttpResponse.prototype),
+      );
 
       this.runMiddlewares(request, response);
     });
@@ -58,16 +60,34 @@ class Server {
 
   private runMiddlewares(req: HttpRequest, res: HttpResponse) {
     this.middlewares.run(req, res, () => {
-      if (!res.headersSent) {
-        this.runRouters(req, res);
-      }
+      this.runRouters(req, res);
     });
   }
 
-  private runRouters(req: HttpRequest, res: HttpResponse) {
-    this.router.forEach((router) => {
-      router.runAllRequests(req, res);
+  private responseProxy(res: HttpResponse): HttpResponse {
+    return new Proxy(res, {
+      get(target: HttpResponse, prop: keyof HttpResponse, receiver: any) {
+        if (typeof target[prop as keyof HttpResponse] === "function") {
+          const method = target[prop as keyof HttpResponse] as Function;
+
+          if ((prop === "json" || prop === "send") && target.headersSent) {
+            throw new Error("You cannot send response twice");
+          }
+
+          return method.bind(target);
+        }
+
+        return Reflect.get(target, prop, receiver);
+      },
     });
+  }
+
+  private async runRouters(req: HttpRequest, res: HttpResponse) {
+    await Promise.all(
+      this.router.map(async (router) => {
+        await router.handleRequest(req, res);
+      }),
+    );
   }
 }
 

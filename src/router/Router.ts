@@ -20,11 +20,7 @@ export class Router extends BaseRouter {
     this.localRoutes.set(newPath, handlers);
   }
 
-  public runAllRequests(req: HttpRequest, res: HttpResponse) {
-    this.handleRequest(req, res);
-  }
-
-  private handleRequest(req: HttpRequest, res: HttpResponse) {
+  public async handleRequest(req: HttpRequest, res: HttpResponse) {
     const path = `${req.method}:${req.url}` as URL_PATH;
     const handlers = this.localRoutes.get(path) ?? [];
 
