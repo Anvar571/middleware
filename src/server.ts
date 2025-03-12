@@ -84,11 +84,20 @@ class Server {
   }
 
   private async runRouters(req: HttpRequest, res: HttpResponse) {
-    await Promise.all(
-      this.router.map(async (router) => {
-        await router.handleRequest(req, res);
-      }),
-    );
+    let index = 0;
+
+    const next = () => {
+      if (index >= this.router.length) {
+        if (!res.headersSent) {
+          res.notFound();
+        }
+        return;
+      }
+      const router = this.router[index++];
+      router.handleRequest(req, res, next);
+    };
+
+    next();
   }
 }
 
