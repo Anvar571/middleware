@@ -1,5 +1,5 @@
-import { HttpResponse } from "../server/Response";
-import { HttpRequest } from "../server/Request";
+import { HttpResponse } from "./Response";
+import { HttpRequest } from "./Request";
 
 export interface IServerOptions {
   port: number;

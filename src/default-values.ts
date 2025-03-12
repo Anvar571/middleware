@@ -1,11 +1,11 @@
-import { IServerOptions } from "../types";
+import { IServerOptions } from "./http";
 
 const defaultOptions: IServerOptions = {
   port: 5000,
   host: "localhost",
 };
 
-export class ServerOptions {
+export class AppServerOptions {
   private _options: IServerOptions;
 
   constructor(serverOptions?: IServerOptions) {

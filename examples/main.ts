@@ -1,4 +1,4 @@
-import { server, Router } from "../main";
+import { server, Router } from "../src/main";
 
 const app = server();
 
@@ -6,18 +6,14 @@ const newRouter = new Router();
 const userRouter = new Router();
 const postRouter = new Router();
 
-app.use((req, res, next) => {
-  console.log("First middleware");
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log("Second middleware");
-  next();
-});
-
-newRouter.get("/", (req, res, next) => {
-  res.json({ message: "Home page" });
+newRouter.get("/", async (req, res, next) => {
+  return new Promise((resolve, reject) => {
+    if (true) {
+      resolve(res.json({ message: "Home page" }));
+    } else {
+      reject({ error: "Hello!" });
+    }
+  });
 });
 
 newRouter.get("/new", (req, res) => {

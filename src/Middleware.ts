@@ -1,6 +1,6 @@
-import { MiddlewareFunc } from "../types";
-import { HttpResponse } from "../server/Response";
-import { HttpRequest } from "../server/Request";
+import { MiddlewareFunc } from "./http";
+import { HttpResponse } from "./Response";
+import { HttpRequest } from "./Request";
 
 export class Middleware {
   private middlewares: MiddlewareFunc[];

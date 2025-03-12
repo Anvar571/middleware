@@ -1,4 +1,4 @@
-import { Router } from "./router";
-import { server } from "./server/server";
+import { Router } from "./Router";
+import { server } from "./server";
 
 export { server, Router };

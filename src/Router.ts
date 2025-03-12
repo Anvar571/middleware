@@ -1,13 +1,15 @@
-import { Handler, RequestMethodType, URL_PATH } from "../types";
-import { BaseRouter } from "../router/baseRouter";
-import { HttpRequest } from "../server/Request";
-import { HttpResponse } from "../server/Response";
+import { BaseRouter } from "./baseRouter";
+import { Handler, RequestMethodType, URL_PATH } from "./http";
+import { HttpRequest } from "./Request";
+import { HttpResponse } from "./Response";
 
 export class Router extends BaseRouter {
   private localRoutes: Map<URL_PATH, Handler[]>;
 
   constructor() {
-    super((path, method, handler) => this.registerRoute(path, method, handler));
+    super((path: string, method: RequestMethodType, handlers: Handler[]) =>
+      this.registerRoute(path, method, handlers),
+    );
     this.localRoutes = new Map();
   }
 

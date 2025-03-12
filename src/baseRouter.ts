@@ -1,4 +1,4 @@
-import { Handler, RequestMethod, RequestMethodType } from "../types";
+import { Handler, RequestMethod, RequestMethodType } from "./http";
 
 export class BaseRouter implements RequestMethod {
   protected delegate: (

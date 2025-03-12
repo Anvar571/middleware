@@ -1,20 +1,21 @@
-import { createServer, Server as HttpServer } from "http";
-import { IServerOptions, MiddlewareFunc } from "../types";
-import { Middleware, Router } from "../router";
+import { Middleware } from "./Middleware";
 import { HttpRequest } from "./Request";
 import { HttpResponse } from "./Response";
-import { ServerOptions } from "../config/default-values";
-import { ExceptionHandler } from "../utility/exaptions";
+import { AppServerOptions } from "./default-values";
+import { ExceptionHandler } from "./exaptions";
+import { IServerOptions, MiddlewareFunc } from "./http";
+import { createServer, Server as HttpServer } from "http";
+import { Router } from "./Router";
 
 class Server {
   private static instance: Server;
   private readonly server: HttpServer;
-  private readonly configs: ServerOptions;
+  private readonly configs: AppServerOptions;
   private readonly router: Router[];
   private readonly middlewares: Middleware;
 
   private constructor(serverOptions?: IServerOptions) {
-    this.configs = new ServerOptions(serverOptions);
+    this.configs = new AppServerOptions(serverOptions);
     this.router = [];
     this.middlewares = new Middleware();
     this.server = createServer((req, res) => {
