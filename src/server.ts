@@ -1,11 +1,11 @@
-import { Middleware } from "./Middleware";
-import { HttpRequest } from "./Request";
-import { HttpResponse } from "./Response";
-import { AppServerOptions } from "./default-values";
-import { ExceptionHandler } from "./exaptions";
-import { IServerOptions, MiddlewareFunc } from "./http";
-import { createServer, Server as HttpServer } from "http";
-import { Router } from "./Router";
+import { createServer, Server as HttpServer } from 'http';
+import { Middleware } from './Middleware';
+import { HttpRequest } from './Request';
+import { HttpResponse } from './Response';
+import { Router } from './Router';
+import { AppServerOptions } from './default-values';
+import { ExceptionHandler } from './exaptions';
+import { IServerOptions, MiddlewareFunc } from './http';
 
 class Server {
   private static instance: Server;
@@ -35,12 +35,12 @@ class Server {
   public use(router: Router): void;
 
   public use(arg1: Router | MiddlewareFunc) {
-    if (typeof arg1 === "function") {
+    if (typeof arg1 === 'function') {
       this.middlewares.add(arg1);
     } else if (arg1 instanceof Router) {
       this.router.push(arg1);
     } else {
-      throw new Error("Incorrect argument type");
+      throw new Error('Incorrect argument type');
     }
   }
 
@@ -68,11 +68,11 @@ class Server {
   private responseProxy(res: HttpResponse): HttpResponse {
     return new Proxy(res, {
       get(target: HttpResponse, prop: keyof HttpResponse, receiver: any) {
-        if (typeof target[prop as keyof HttpResponse] === "function") {
+        if (typeof target[prop as keyof HttpResponse] === 'function') {
           const method = target[prop as keyof HttpResponse] as Function;
 
-          if ((prop === "json" || prop === "send") && target.headersSent) {
-            throw new Error("You cannot send response twice");
+          if ((prop === 'json' || prop === 'send') && target.headersSent) {
+            throw new Error('You cannot send response twice');
           }
 
           return method.bind(target);

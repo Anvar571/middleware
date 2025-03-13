@@ -22,5 +22,8 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.4",
     "ts-node": "^10.9.2"
+  },
+  "prettier": {
+    "singleQuote": true
   }
 }
