@@ -6,6 +6,7 @@ import { Router } from './Router';
 import { AppServerOptions } from './default-values';
 import { ExceptionHandler } from './exaptions';
 import { IServerOptions, MiddlewareFunc } from './http';
+import { type AddressInfo } from 'net';
 
 class Server {
   private static instance: Server;
@@ -51,12 +52,16 @@ class Server {
     return this.instance;
   }
 
-  public init(callback?: () => void) {
-    this.server.listen(
-      this.configs.options.port,
-      this.configs.options.host,
-      callback,
-    );
+  public init() {
+    return new Promise<AddressInfo>((resolve) => {
+      this.server.listen(
+        this.configs.options.port,
+        this.configs.options.host,
+        () => {
+          resolve(this.server.address() as AddressInfo);
+        },
+      );
+    });
   }
 
   private runMiddlewares(req: HttpRequest, res: HttpResponse) {
