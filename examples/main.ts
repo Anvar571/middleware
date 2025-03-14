@@ -30,6 +30,8 @@ app.use(newRouter);
 app.use(userRouter);
 app.use(postRouter);
 
-app.init(() => {
-  console.log(`App running on ${5000} port`);
-});
+(async () => {
+  const serverAddress = await app.init();
+  console.log(`Server address ${serverAddress.address}`);
+  console.log(`Server address ${serverAddress.port}`);
+})();
